@@ -393,7 +393,7 @@ class JW8103A_Control(QtWidgets.QMainWindow, Ui_MainWindow):
         elif self.data_source == "TCP":
             self.TCPClient.send(json.dumps({"cmd": "Connect"}))
             result = self.ClientQ.get(block=True, timeout=1)
-            if result["isSuccess"]:
+            if result["IsSuccessful"]:
                 self.updateInfo("连接成功！")
                 self.Record_Thread = threading.Thread(target=self.PowerRecord)
                 self.Record_Thread.start()
@@ -498,6 +498,9 @@ class JW8103A_Control(QtWidgets.QMainWindow, Ui_MainWindow):
                 if not success:
                     error_msg = "关闭记录错误!"
                 return self.make_pack(success, '', error_msg)
+            elif data['parameter']['Con'] == 'Clear':
+                self.Clean_callback()
+                return self.make_pack(True, '', 'Null')
             else:
                 return self.make_pack(False, '', f'command not supported:{data}')
         elif data['opcode'] == 'ConnectDevice':
@@ -516,8 +519,8 @@ class JW8103A_Control(QtWidgets.QMainWindow, Ui_MainWindow):
         else:
             return self.make_pack(False, "", "Unknown command!")
 
-    def make_pack(self, isSuccess, Value, ErrorMessage):
-        data = {"isSuccess": isSuccess, "Value": Value, "ErrorMessage": ErrorMessage}
+    def make_pack(self, IsSuccessful, Value, ErrorMessage):
+        data = {"IsSuccessful": IsSuccessful, "Value": Value, "ErrorMessage": ErrorMessage}
         return json.dumps(data)
 
     def Disconnect_JW(self, need_Box=True):

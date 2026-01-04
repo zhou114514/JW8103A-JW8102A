@@ -114,7 +114,7 @@ python 嘉慧功率计.py
 响应格式：
 ```json
 {
-  "isSuccess": true,
+  "IsSuccessful": true,
   "Value": {...},
   "ErrorMessage": ""
 }
